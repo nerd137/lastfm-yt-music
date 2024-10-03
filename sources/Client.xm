@@ -126,7 +126,16 @@ static NSString* const LFMBaseURL = @"https://ws.audioscrobbler.com/2.0";
 		NSURLResponse *response;
     NSError *error;
 
-		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+		NSURLSession *session = [NSURLSession sharedSession];
+    __block NSData *data = nil;
+    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable sessionData, NSURLResponse * _Nullable sessionResponse, NSError * _Nullable sessionError) {
+        data = sessionData;
+        response = sessionResponse;
+        error = sessionError;
+        dispatch_semaphore_signal(sema);
+    }] resume];
+    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
 
 		if (error) {
 			NSLog(@"Faced error while creating token: %@", error);
@@ -194,7 +203,16 @@ static NSString* const LFMBaseURL = @"https://ws.audioscrobbler.com/2.0";
 
 		NSURLResponse *response;
     NSError *error;
-    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    NSURLSession *session = [NSURLSession sharedSession];
+    __block NSData *data = nil;
+    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable sessionData, NSURLResponse * _Nullable sessionResponse, NSError * _Nullable sessionError) {
+        data = sessionData;
+        response = sessionResponse;
+        error = sessionError;
+        dispatch_semaphore_signal(sema);
+    }] resume];
+    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
 
 		id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
 		if (error) {
@@ -228,7 +246,7 @@ static NSString* const LFMBaseURL = @"https://ws.audioscrobbler.com/2.0";
 
 	+ (NSString *)urlEncodedString:(NSString *)str {
 		 if ([str isKindOfClass:[NSString class]]) {
-        NSString *s = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
+        NSString *s = [originalString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
             NULL,
             (__bridge CFStringRef)str,
             NULL,
@@ -242,7 +260,7 @@ static NSString* const LFMBaseURL = @"https://ws.audioscrobbler.com/2.0";
 
 	+ (NSString *)md5:(NSString*)string {
 		unsigned char digest[CC_MD5_DIGEST_LENGTH], i;
-		CC_MD5([string UTF8String], (CC_LONG)[string lengthOfBytesUsingEncoding:NSUTF8StringEncoding], digest);
+		CC_SHA256([string UTF8String], (CC_LONG)[string lengthOfBytesUsingEncoding:NSUTF8StringEncoding], digest);
 		NSMutableString *ms = [NSMutableString string];
 		for (i=0;i<CC_MD5_DIGEST_LENGTH;i++) {
 			[ms appendFormat: @"%02x", (int)(digest[i])];
