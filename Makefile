@@ -13,4 +13,4 @@ $(TWEAK_NAME)_FILES = $(shell find sources -name "*.x*")
 $(TWEAK_NAME)_CFLAGS = -fobjc-arc -DAPI_KEY=@\"$(LASTFM_API_KEY)\" -DAPI_SECRET=@\"$(LASTFM_API_SECRET)\"
 $(TWEAK_NAME)_FRAMEWORKS = UIKit Foundation CydiaSubstrate
 
-include $(THEOS_MAKE_PATH)/tweak.mk
+ADDITIONAL_CFLAGS = -Wno-unused-variable -Wno-error
