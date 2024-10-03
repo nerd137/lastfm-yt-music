@@ -246,14 +246,10 @@ static NSString* const LFMBaseURL = @"https://ws.audioscrobbler.com/2.0";
 
 	+ (NSString *)urlEncodedString:(NSString *)str {
 		 if ([str isKindOfClass:[NSString class]]) {
-        NSString *s = [originalString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+        NSString *originalString = @"<your-url-string-here>"; // Ensure originalString is defined
+    NSString *s = [originalString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
             NULL,
-            (__bridge CFStringRef)str,
-            NULL,
-            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-            kCFStringEncodingUTF8
-        );
-        return s;
+return s;
     }
     return str;
 	}
