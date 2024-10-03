@@ -131,8 +131,8 @@ static NSString* const LFMBaseURL = @"https://ws.audioscrobbler.com/2.0";
     dispatch_semaphore_t sema = dispatch_semaphore_create(0);
     [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable sessionData, NSURLResponse * _Nullable sessionResponse, NSError * _Nullable sessionError) {
         data = sessionData;
-        response = sessionResponse;
-        error = sessionError;
+        __block NSURLResponse *response = nil;
+        __block NSError *error = nil;
         dispatch_semaphore_signal(sema);
     }] resume];
     dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
@@ -208,8 +208,8 @@ static NSString* const LFMBaseURL = @"https://ws.audioscrobbler.com/2.0";
     dispatch_semaphore_t sema = dispatch_semaphore_create(0);
     [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable sessionData, NSURLResponse * _Nullable sessionResponse, NSError * _Nullable sessionError) {
         data = sessionData;
-        response = sessionResponse;
-        error = sessionError;
+        __block NSURLResponse *response = nil;
+        __block NSError *error = nil;
         dispatch_semaphore_signal(sema);
     }] resume];
     dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
@@ -249,7 +249,7 @@ static NSString* const LFMBaseURL = @"https://ws.audioscrobbler.com/2.0";
         NSString *originalString = @"<your-url-string-here>"; // Ensure originalString is defined
     NSString *s = [originalString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
             NULL,
-return s;
+    return s;
     }
     return str;
 	}
